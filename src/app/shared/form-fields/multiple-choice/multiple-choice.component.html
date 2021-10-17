@@ -1,0 +1,55 @@
+<h3>Q{{ questionIndex + 1 }}</h3>
+
+<div [formGroup]="question">
+  <input formControlName="content" placeholder="Question content" />
+
+  <div
+    formArrayName="answers"
+    *ngFor="
+      let answer of $any($any(question.controls) | control: 'answers');
+      let i = index
+    "
+  >
+    <div [formGroupName]="i">
+      <input formControlName="label" placeholder="label" />
+      <mat-checkbox
+        formControlName="isCorrect"
+        (change)="validateCorrectAnswer($event, question, i)"
+        >is correct</mat-checkbox
+      >
+
+      <button
+        class="mb-2"
+        [disabled]="$any(question.get('answers')).length <= 1"
+        (click)="removeAnswer(i, question)"
+      >
+        remove answer
+      </button>
+    </div>
+  </div>
+
+  <!-- <div
+    formArrayName="answers"
+    *ngFor="
+      let answer of $any($any(question.controls) | control: 'answers');
+      let i = index
+    "
+  >
+    <div [formGroupName]="i">
+      <input formControlName="label" placeholder="label" />
+      <mat-checkbox
+        formControlName="isCorrect"
+        (change)="validateCorrectAnswer($event, question, i)"
+        >is correct</mat-checkbox
+      >
+
+      <button
+        class="mb-2"
+        [disabled]="$any(question.get('answers')).length <= 1"
+        (click)="removeAnswer(i, question)"
+      >
+        remove answer
+      </button>
+    </div>
+  </div> -->
+</div>
