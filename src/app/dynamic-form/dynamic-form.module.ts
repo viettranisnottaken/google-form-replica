@@ -5,8 +5,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { ControlPipe } from '../control.pipe';
 import { MultipleChoiceModule } from '../shared/form-fields/multiple-choice/multiple-choice.module';
+import { ShortAnswerModule } from '../shared/form-fields/short-answer/short-answer.module';
+import { FileUploadModule } from '../shared/form-fields/file-upload/file-upload.module';
 
 @NgModule({
   declarations: [DynamicFormComponent],
@@ -17,6 +18,8 @@ import { MultipleChoiceModule } from '../shared/form-fields/multiple-choice/mult
     MatSelectModule,
     MatCheckboxModule,
     MultipleChoiceModule,
+    ShortAnswerModule,
+    FileUploadModule,
   ],
   exports: [DynamicFormComponent],
 })

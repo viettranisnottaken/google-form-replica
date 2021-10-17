@@ -14,15 +14,8 @@ import { validateAbsentCorrectAnswer } from '../../validation/validateAbsentCorr
   selector: 'app-multiple-choice',
   templateUrl: './multiple-choice.component.html',
   styleUrls: ['./multiple-choice.component.scss'],
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => MultipleChoiceComponent),
-      multi: true,
-    },
-  ],
 })
-export class MultipleChoiceComponent implements ControlValueAccessor, OnInit {
+export class MultipleChoiceComponent implements OnInit {
   // question = this.fb.group({
   //   content: 'Question',
   //   type: 'single',
@@ -32,26 +25,17 @@ export class MultipleChoiceComponent implements ControlValueAccessor, OnInit {
   //   ),
   // });
 
-  question!: any;
-
   @Input() questionIndex!: number;
-  // @Input() question!: FormGroup;
+  @Input() question!: FormGroup;
+
+  answers!: any;
 
   constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
     console.log(this.question);
+    this.answers = this.question.controls.answers as FormArray;
   }
-
-  writeValue(obj: any) {
-    this.question = obj;
-  }
-
-  registerOnChange(fn: any) {}
-
-  registerOnTouched(fn: any) {}
-
-  setDisabledState(isDisabled: boolean) {}
 
   addAnswer(question: AbstractControl) {
     const answers = question.get('answers') as FormArray;

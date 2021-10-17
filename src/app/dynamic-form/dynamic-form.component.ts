@@ -17,28 +17,20 @@ import { validateAbsentCorrectAnswer } from '../shared/validation/validateAbsent
   styleUrls: ['./dynamic-form.component.scss'],
 })
 export class DynamicFormComponent implements OnInit {
-  // quiz = this.fb.group({
-  //   questions: this.fb.array([
-  //     this.createQuestionControl('Question 1', {
-  //       label: 'answer',
-  //       correctAnswer: true,
-  //     }),
-  //   ]),
-  // });
-
   quiz = this.fb.group({
     questions: this.fb.array([
-      {
-        content: 'Question',
-        type: 'single',
-        answers: { label: 'Answer', correctAnswer: 'Correct Answer' },
-      },
+      this.createQuestionControl('Question 1', 'single', {
+        label: 'answer',
+        correctAnswer: true,
+      }),
     ]),
   });
 
   questionTypes = [
     { value: 'single', label: 'Single choice' },
     { value: 'multiple', label: 'Multiple choice' },
+    { value: 'fill', label: 'Fill in the blanks' },
+    { value: 'upload', label: 'File upload' },
   ];
 
   questionsControl = this.quiz.get('questions') as FormArray;
@@ -52,7 +44,7 @@ export class DynamicFormComponent implements OnInit {
   }
 
   addQuestion() {
-    const question = this.createQuestionControl('Question', {
+    const question = this.createQuestionControl('Question', 'single', {
       label: 'answer',
       correctAnswer: true,
     });
@@ -86,12 +78,24 @@ export class DynamicFormComponent implements OnInit {
 
   onQuestionTypeChange(event: MatSelectChange, question: AbstractControl) {
     // const answers = this.getCurrentAnswers(questionIndex);
-    if (event.value === 'single') {
-      const answers = question.get('answers') as FormArray;
+    const answers = question.get('answers') as FormArray;
+    const answerValues = answers.value;
+    console.log('====', answerValues);
 
-      answers.controls.forEach((answer: any) => {
-        answer.controls.correctAnswer.setValue(false);
-      });
+    switch (event.value) {
+      case 'single':
+        answers.controls.forEach((answer: any) => {
+          answer.controls.correctAnswer.setValue(false);
+        });
+        break;
+      case 'fill':
+        answers.controls.forEach((answer: any, index) => {
+          answer.controls.correctAnswer.setValue('correct answer');
+        });
+        break;
+
+      default:
+        break;
     }
   }
 
@@ -117,7 +121,7 @@ export class DynamicFormComponent implements OnInit {
     console.log('form value', this.quiz.value);
   }
 
-  private createAnswerControl(label = '', correctAnswer = false) {
+  private createAnswerControl(label = '', correctAnswer: boolean | string) {
     return this.fb.group({
       label,
       correctAnswer,
@@ -126,15 +130,66 @@ export class DynamicFormComponent implements OnInit {
 
   private createQuestionControl(
     content: string,
-    answer: { label: string; correctAnswer: boolean }
+    type = 'single',
+    answer: { label: string; correctAnswer: boolean | string }
   ) {
     return this.fb.group({
       content,
-      type: 'single',
+      type,
       answers: this.fb.array(
         [this.createAnswerControl(answer.label, answer.correctAnswer)],
         validateAbsentCorrectAnswer('correctAnswer')
       ),
     });
+
+    // let form;
+
+    // switch (type) {
+    //   case 'single':
+    //     form = this.fb.group({
+    //       content,
+    //       type,
+    //       answers: this.fb.array(
+    //         [this.createAnswerControl(answer.label, answer.correctAnswer)],
+    //         validateAbsentCorrectAnswer('correctAnswer')
+    //       ),
+    //     });
+    //     break;
+    //   case 'multiple':
+    //     this.fb.group({
+    //       content,
+    //       type,
+    //       answers: this.fb.array(
+    //         [this.createAnswerControl(answer.label, answer.correctAnswer)],
+    //         validateAbsentCorrectAnswer('correctAnswer')
+    //       ),
+    //     });
+    //     break;
+    //   case 'fill':
+    //     this.fb.group({
+    //       content,
+    //       type,
+    //       answers: this.fb.array(
+    //         [this.createAnswerControl(answer.label, answer.correctAnswer)],
+    //         validateAbsentCorrectAnswer('correctAnswer')
+    //       ),
+    //     });
+    //     break;
+    //   case 'upload':
+    //     break;
+
+    //   default:
+    //     form = this.fb.group({
+    //       content,
+    //       type,
+    //       answers: this.fb.array(
+    //         [this.createAnswerControl(answer.label, answer.correctAnswer)],
+    //         validateAbsentCorrectAnswer('correctAnswer')
+    //       ),
+    //     });
+    //     break;
+    // }
+
+    // return form
   }
 }

@@ -42,10 +42,35 @@
         </mat-form-field>
         <br />
 
-        <app-multiple-choice
-          [formControlName]="questionIndex"
-          [questionIndex]="questionIndex"
-        ></app-multiple-choice>
+        <div [ngSwitch]="question.value.type">
+          <ng-container *ngSwitchCase="'single'">
+            <app-multiple-choice
+              [question]="$any(question)"
+              [questionIndex]="questionIndex"
+            ></app-multiple-choice>
+          </ng-container>
+          <ng-container *ngSwitchCase="'multiple'">
+            <app-multiple-choice
+              [question]="$any(question)"
+              [questionIndex]="questionIndex"
+            ></app-multiple-choice>
+          </ng-container>
+          <ng-container *ngSwitchCase="'fill'">
+            <app-short-answer
+              [question]="$any(question)"
+              [questionIndex]="questionIndex"
+            ></app-short-answer>
+          </ng-container>
+          <ng-container *ngSwitchCase="'upload'">
+            <app-file-upload></app-file-upload>
+          </ng-container>
+          <ng-container *ngSwitchDefault>
+            <app-multiple-choice
+              [question]="$any(question)"
+              [questionIndex]="questionIndex"
+            ></app-multiple-choice>
+          </ng-container>
+        </div>
 
         <!-- <input formControlName="content" placeholder="Question content" />
         <div

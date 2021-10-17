@@ -1,1 +1,26 @@
-<p>short-answer works!</p>
+<div [formGroup]="question">
+  <input formControlName="content" placeholder="Question content" />
+
+  <div
+    formArrayName="answers"
+    *ngFor="
+      let answer of $any($any(question) | control: 'answers');
+      let i = index
+    "
+  >
+    <div [formGroupName]="i">
+      <input formControlName="label" placeholder="label" />
+      <input formControlName="correctAnswer" placeholder="correctAnswer" />
+
+      <button class="mb-2" (click)="addAnswer(question)">add answer</button>
+
+      <button
+        class="mb-2"
+        [disabled]="$any(question.get('answers')).length <= 1"
+        (click)="removeAnswer(i, question)"
+      >
+        remove answer
+      </button>
+    </div>
+  </div>
+</div>
